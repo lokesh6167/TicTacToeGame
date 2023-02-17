@@ -1,4 +1,5 @@
 const cells = document.querySelectorAll('div');
+const tableElmt = document.getElementsByTagName("table")[0];
 const result = document.querySelector("#result");
 let boxValues = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 // let winned=false;
@@ -28,7 +29,7 @@ function winnerCheck(i, j) {
 }
 function start() {
     started = true;
-    count=0;
+    count = 0;
     console.log("Start Button Clicked...");
 }
 function reset() {
@@ -40,32 +41,31 @@ function reset() {
     started = false;
     // result.textContent="click start button to start the Game !!"
 }
-cells.forEach((cell) => {
-    cell.addEventListener('click', (e) => {
-        if (!started) {
-            return
+
+tableElmt.addEventListener('click', (e) => {
+    if (!started) {
+        return
+    }
+    const i = parseInt(e.target.id / 3);
+    const j = e.target.id % 3;
+    if (!e.target.textContent) {
+        if (count % 2 === 0) {
+            e.target.textContent = 1;
+            result.textContent = "Its player 2 turn";
+            boxValues[i][j] = 1;
+        } else if (count % 2 === 1) {
+            e.target.textContent = 2;
+            result.textContent = "Its player 1 turn";
+            boxValues[i][j] = 2;
         }
-        const i = parseInt(e.target.id / 3);
-        const j = e.target.id % 3 ;
-        if (!e.target.textContent) {
-            if (count % 2 === 0) {
-                e.target.textContent = 1;
-                result.textContent = "Its player 2 turn";
-                boxValues[i][j] = 1;
-            } else if (count % 2 === 1) {
-                e.target.textContent = 2;
-                result.textContent = "Its player 1 turn";
-                boxValues[i][j] = 2;
-            }
-            if (winnerCheck(i, j)) {
-                result.textContent = `player-${count % 2 === 0 ? "1" : "2"} is the winner !!`;
-                reset();
-            }
-            if (count === 8) {
-                reset();
-                result.textContent = "Match draw.. Pls start a new game by pressing start button !!";
-            }
-            count++;
+        if (winnerCheck(i, j)) {
+            result.textContent = `player-${count % 2 === 0 ? "1" : "2"} is the winner !!`;
+            reset();
         }
-    })
+        if (count === 8) {
+            reset();
+            result.textContent = "Match draw.. Pls start a new game by pressing start button !!";
+        }
+        count++;
+    }
 });
